@@ -16,15 +16,15 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
 @RequestMapping("/data")
-public class DataParser{
+public class DataParser {
 
     @Autowired
     List<OWASP> dataList;
-
 
 
     @PostConstruct
@@ -44,22 +44,22 @@ public class DataParser{
                 owasp.setReqId(csvRecord.get("req_id"));
                 owasp.setReqDescription(csvRecord.get("req_description"));
                 owasp.setLevel1(csvRecord.get("level1"));
-               owasp.setLevel2( csvRecord.get("level2"));
+                owasp.setLevel2(csvRecord.get("level2"));
                 owasp.setLevel3(csvRecord.get("level3"));
                 owasp.setCwe(csvRecord.get("cwe"));
                 owasp.setNist(csvRecord.get("nist"));
                 System.out.println(owasp);
                 dataList.add(owasp);
             }
+            dataList.remove(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @GetMapping("/chapterId/{chapterId}")
-    public List<OWASP> getDataByChapterId(@PathVariable  String chapterId){
+    public List<OWASP> getDataByChapterId(@PathVariable String chapterId) {
         List<OWASP> chapterList = new ArrayList<>();
-        dataList.remove(0);
         dataList.stream().forEach(owasp -> {
             if (owasp.getChapterId().equals(chapterId)) {
                 chapterList.add(owasp);
@@ -67,5 +67,12 @@ public class DataParser{
             }
         });
         return chapterList;
+    }
+
+    @GetMapping("/cwe/{cwe}")
+    public List<OWASP> getDataByCwe(@PathVariable String cwe) {
+
+        return dataList.stream().filter(data->data.getCwe().equals(cwe)).collect(Collectors.toList());
+
     }
 }
