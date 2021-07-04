@@ -57,7 +57,7 @@ public class DataParser {
         }
     }
 
-    @GetMapping("/chapterId/{chapterId}")
+    @GetMapping("/chapter/{chapterId}")
     public List<OWASP> getDataByChapterId(@PathVariable String chapterId) {
         List<OWASP> chapterList = new ArrayList<>();
         dataList.stream().forEach(owasp -> {
